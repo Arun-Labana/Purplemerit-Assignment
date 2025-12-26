@@ -13,7 +13,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:ci": "jest --coverage --coverageReporters=text-lcov --ci",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint .",
     "format": "prettier --write \"src/**/*.ts\"",
     "migrate": "ts-node scripts/migrate.ts",
     "seed": "ts-node scripts/seed.ts"
