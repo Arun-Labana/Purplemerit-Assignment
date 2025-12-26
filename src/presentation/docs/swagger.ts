@@ -16,9 +16,9 @@ const options: swaggerJsdoc.Options = {
     servers: [
       {
         url: process.env.API_BASE_URL || (process.env.NODE_ENV === 'production' 
-          ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN || 'collab-workspace-api-production.up.railway.app'}`
+          ? `https://collab-workspace-api-production.up.railway.app`
           : `http://localhost:${config.app.port}`),
-        description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server',
+        description: process.env.NODE_ENV === 'production' ? 'Production server (Railway)' : 'Development server',
       },
     ],
     components: {

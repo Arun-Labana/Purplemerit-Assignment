@@ -23,10 +23,16 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.jsdelivr.net"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", process.env.API_BASE_URL || `http://localhost:${config.app.port}`].filter(Boolean),
+      connectSrc: [
+        "'self'",
+        process.env.API_BASE_URL || `https://${process.env.RAILWAY_PUBLIC_DOMAIN || 'collab-workspace-api-production.up.railway.app'}`,
+        `http://localhost:${config.app.port}`,
+        "https://*.up.railway.app",
+      ].filter(Boolean),
+      fontSrc: ["'self'", "https://cdn.jsdelivr.net"],
     },
   },
 }));
