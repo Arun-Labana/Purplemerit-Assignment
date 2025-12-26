@@ -1,5 +1,4 @@
 import ProjectRepository from '../../../infrastructure/database/postgresql/ProjectRepository';
-import CacheService from '../../../infrastructure/database/redis/CacheService';
 import ActivityLogRepository from '../../../infrastructure/database/mongodb/ActivityLogRepository';
 import { IProjectCreate } from '../../../shared/types';
 import { Project } from '../../../domain/entities/Project';

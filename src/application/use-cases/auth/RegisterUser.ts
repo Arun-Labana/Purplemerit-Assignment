@@ -23,6 +23,7 @@ export class RegisterUser {
       const user = await UserRepository.create({
         email: request.email,
         name: request.name,
+        password: request.password, // Include for interface compatibility
         passwordHash,
       });
 

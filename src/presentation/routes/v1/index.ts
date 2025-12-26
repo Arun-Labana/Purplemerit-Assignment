@@ -9,7 +9,7 @@ router.use('/auth', authRoutes);
 router.use('/projects', projectRoutes);
 
 // Health check
-router.get('/health', (req, res) => {
+router.get('/health', (_req, res) => {
   res.json({
     success: true,
     message: 'Server is healthy',

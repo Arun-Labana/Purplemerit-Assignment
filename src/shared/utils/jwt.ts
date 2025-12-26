@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import config from '../../config';
 import { ITokenPayload } from '../types';
 import logger from '../../infrastructure/observability/logger';
@@ -10,9 +10,10 @@ export class JWTUtil {
    */
   static generateAccessToken(payload: ITokenPayload): string {
     try {
-      return jwt.sign(payload, config.jwt.secret, {
+      const options: SignOptions = {
         expiresIn: config.jwt.expiresIn,
-      });
+      };
+      return jwt.sign(payload, config.jwt.secret, options);
     } catch (error) {
       logger.error('Error generating access token', error);
       throw error;
@@ -24,9 +25,10 @@ export class JWTUtil {
    */
   static generateRefreshToken(payload: ITokenPayload): string {
     try {
-      return jwt.sign(payload, config.jwt.refreshSecret, {
+      const options: SignOptions = {
         expiresIn: config.jwt.refreshExpiresIn,
-      });
+      };
+      return jwt.sign(payload, config.jwt.refreshSecret, options);
     } catch (error) {
       logger.error('Error generating refresh token', error);
       throw error;

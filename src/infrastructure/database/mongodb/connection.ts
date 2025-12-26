@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import config from '../../config';
-import logger from '../observability/logger';
+import config from '../../../config';
+import logger from '../../observability/logger';
 
 class MongoDatabase {
   private static instance: MongoDatabase;

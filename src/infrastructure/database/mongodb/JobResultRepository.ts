@@ -1,6 +1,6 @@
-import { JobResultModel } from '../schemas/JobResult';
-import { IJobResult } from '../../../../shared/types';
-import logger from '../../../observability/logger';
+import { JobResultModel } from './schemas/JobResult';
+import { IJobResult } from '../../../shared/types';
+import logger from '../../observability/logger';
 
 export class JobResultRepository {
   async create(jobResultData: IJobResult): Promise<void> {

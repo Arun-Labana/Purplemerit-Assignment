@@ -42,7 +42,7 @@ app.use(loggingMiddleware);
 app.use(generalRateLimiter);
 
 // Health check (before API routes)
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.json({
     success: true,
     message: 'Server is healthy',
@@ -52,7 +52,7 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 // Metrics endpoint
-app.get('/metrics', async (req: Request, res: Response) => {
+app.get('/metrics', async (_req: Request, res: Response) => {
   try {
     res.set('Content-Type', metricsRegister.contentType);
     const metrics = await metricsRegister.metrics();
@@ -67,7 +67,7 @@ app.get('/metrics', async (req: Request, res: Response) => {
 app.use(`/api/${config.app.apiVersion}`, v1Routes);
 
 // 404 handler
-app.use((req: Request, res: Response) => {
+app.use((_req: Request, res: Response) => {
   res.status(404).json({
     success: false,
     error: 'Route not found',

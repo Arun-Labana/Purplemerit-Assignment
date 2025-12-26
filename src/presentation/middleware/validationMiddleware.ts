@@ -3,7 +3,7 @@ import { ObjectSchema } from 'joi';
 import { Validators } from '../../shared/utils';
 
 export const validate = (schema: ObjectSchema) => {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return (req: Request, _res: Response, next: NextFunction): void => {
     try {
       req.body = Validators.validate(schema, req.body);
       next();

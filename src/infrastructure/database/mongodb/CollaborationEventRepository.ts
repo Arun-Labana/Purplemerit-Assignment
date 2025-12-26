@@ -1,6 +1,6 @@
-import { CollaborationEventModel } from '../schemas/CollaborationEvent';
-import { ICollaborationEvent } from '../../../../shared/types';
-import logger from '../../../observability/logger';
+import { CollaborationEventModel } from './schemas/CollaborationEvent';
+import { ICollaborationEvent } from '../../../shared/types';
+import logger from '../../observability/logger';
 
 export class CollaborationEventRepository {
   async create(eventData: ICollaborationEvent): Promise<void> {

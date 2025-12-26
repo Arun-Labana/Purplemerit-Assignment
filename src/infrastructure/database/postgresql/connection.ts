@@ -1,6 +1,6 @@
 import { Pool, PoolClient } from 'pg';
-import config from '../../config';
-import logger from '../observability/logger';
+import config from '../../../config';
+import logger from '../../observability/logger';
 
 class PostgresDatabase {
   private pool: Pool;

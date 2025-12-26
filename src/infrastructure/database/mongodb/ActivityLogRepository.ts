@@ -1,6 +1,6 @@
-import { ActivityLogModel } from '../schemas/ActivityLog';
-import { IActivityLog } from '../../../../shared/types';
-import logger from '../../../observability/logger';
+import { ActivityLogModel } from './schemas/ActivityLog';
+import { IActivityLog } from '../../../shared/types';
+import logger from '../../observability/logger';
 
 export class ActivityLogRepository {
   async create(activityData: IActivityLog): Promise<void> {
