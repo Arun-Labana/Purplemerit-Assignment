@@ -14,7 +14,6 @@ const JobResultSchema = new Schema<IJobResultDocument>(
       type: String,
       required: true,
       unique: true,
-      index: true,
     },
     inputPayload: {
       type: Schema.Types.Mixed,

@@ -14,7 +14,28 @@ router.use('/workspaces', workspaceRoutes);
 router.use('/collaboration', collaborationRoutes);
 router.use('/jobs', jobRoutes);
 
-// Health check
+/**
+ * @swagger
+ * /api/v1/health:
+ *   get:
+ *     summary: Health check endpoint
+ *     tags: [Health]
+ *     responses:
+ *       200:
+ *         description: Server is healthy
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ */
 router.get('/health', (_req, res) => {
   res.json({
     success: true,

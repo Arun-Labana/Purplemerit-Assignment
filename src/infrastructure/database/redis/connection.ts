@@ -7,8 +7,10 @@ class RedisDatabase {
   private static instance: RedisDatabase;
 
   private constructor() {
+    // Force IPv4 to avoid IPv6 connection issues
+    const redisUrl = config.database.redis.url.replace('localhost', '127.0.0.1');
     this.client = createClient({
-      url: config.database.redis.url,
+      url: redisUrl,
     });
 
     this.client.on('connect', () => {

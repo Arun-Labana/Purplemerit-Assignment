@@ -4,9 +4,10 @@ import logger from '../../observability/logger';
 
 class MongoDatabase {
   private static instance: MongoDatabase;
+  private connectionPromise: Promise<void>;
 
   private constructor() {
-    this.connect();
+    this.connectionPromise = this.connect();
   }
 
   public static getInstance(): MongoDatabase {
@@ -18,7 +19,11 @@ class MongoDatabase {
 
   private async connect(): Promise<void> {
     try {
-      await mongoose.connect(config.database.mongodb.uri);
+      // Force IPv4 to avoid IPv6 connection issues
+      const mongoUri = config.database.mongodb.uri.replace('localhost', '127.0.0.1');
+      await mongoose.connect(mongoUri, {
+        serverSelectionTimeoutMS: 10000,
+      });
       
       logger.info('MongoDB connected successfully');
 
@@ -46,8 +51,16 @@ class MongoDatabase {
 
   public async testConnection(): Promise<boolean> {
     try {
+      // Wait for initial connection to complete
+      await this.connectionPromise;
+      
+      // Wait for connection to be ready (state 1 = connected)
+      let attempts = 0;
+      while (mongoose.connection.readyState !== 1 && attempts < 20) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        attempts++;
+      }
       const state = mongoose.connection.readyState;
-      // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
       logger.info('MongoDB connection state', { state });
       return state === 1;
     } catch (error) {

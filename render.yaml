@@ -22,16 +22,14 @@ services:
           name: collab-postgres
           property: connectionString
       - key: MONGODB_URI
-        fromDatabase:
-          name: collab-mongodb
-          property: connectionString
+        value: mongodb+srv://labanaarun0_db_user:Password1@cluster0.w7emiil.mongodb.net/collaborative_workspace?retryWrites=true&w=majority
       - key: REDIS_URL
         fromService:
           name: collab-redis
           type: redis
           property: connectionString
       - key: RABBITMQ_URL
-        sync: false # Set manually
+        value: amqps://fcsjowty:vtFpaBA2HlHoldtOA3encf__AYHDH_Ma@leopard.lmq.cloudamqp.com/fcsjowty
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
@@ -44,6 +42,10 @@ services:
         value: https://your-frontend.onrender.com
       - key: LOG_LEVEL
         value: info
+      - key: RATE_LIMIT_WINDOW_MS
+        value: "900000"
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: "50"
     healthCheckPath: /health
 
   # Background Worker
@@ -62,16 +64,14 @@ services:
           name: collab-postgres
           property: connectionString
       - key: MONGODB_URI
-        fromDatabase:
-          name: collab-mongodb
-          property: connectionString
+        value: mongodb+srv://labanaarun0_db_user:Password1@cluster0.w7emiil.mongodb.net/collaborative_workspace?retryWrites=true&w=majority
       - key: REDIS_URL
         fromService:
           name: collab-redis
           type: redis
           property: connectionString
       - key: RABBITMQ_URL
-        sync: false # Set manually
+        value: amqps://fcsjowty:vtFpaBA2HlHoldtOA3encf__AYHDH_Ma@leopard.lmq.cloudamqp.com/fcsjowty
       - key: LOG_LEVEL
         value: info
 
@@ -80,13 +80,6 @@ databases:
   - name: collab-postgres
     databaseName: collaborative_workspace
     user: collab_user
-    plan: starter
-    region: oregon
-    ipAllowList: []
-
-  # MongoDB Database
-  - name: collab-mongodb
-    databaseName: collaborative_workspace
     plan: starter
     region: oregon
     ipAllowList: []

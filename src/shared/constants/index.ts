@@ -9,11 +9,11 @@ export const APP_CONSTANTS = {
 
   // Rate limiting
   RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 minutes
-  RATE_LIMIT_MAX_REQUESTS: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100', 10),
+  RATE_LIMIT_MAX_REQUESTS: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '50', 10), // 50 requests per 15 minutes
 
   // Auth rate limiting
-  AUTH_RATE_LIMIT_WINDOW_MS: 900000, // 15 minutes
-  AUTH_RATE_LIMIT_MAX_REQUESTS: 5,
+  AUTH_RATE_LIMIT_WINDOW_MS: parseInt(process.env.AUTH_RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 minutes
+  AUTH_RATE_LIMIT_MAX_REQUESTS: parseInt(process.env.AUTH_RATE_LIMIT_MAX_REQUESTS || '50', 10), // 50 requests per 15 minutes
 
   // Job processing
   MAX_JOB_RETRIES: 3,
