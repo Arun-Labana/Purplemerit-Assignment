@@ -42,7 +42,7 @@ services:
     image: redis:7-alpine
     container_name: collab-redis
     ports:
-      - "6379:6379"
+      - "6380:6379"  # Using 6380 externally to avoid port conflict
     volumes:
       - redis_data:/data
     healthcheck:
