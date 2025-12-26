@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { authMiddleware, AuthRequest } from '../../../../src/presentation/middleware/authMiddleware';
 import { JWTUtil } from '../../../../src/shared/utils';
 import UserRepository from '../../../../src/infrastructure/database/postgresql/UserRepository';

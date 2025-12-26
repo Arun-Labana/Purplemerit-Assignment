@@ -2,8 +2,6 @@ import { Response, NextFunction } from 'express';
 import ProjectController from '../../../../src/presentation/controllers/ProjectController';
 import CreateProject from '../../../../src/application/use-cases/projects/CreateProject';
 import GetProject from '../../../../src/application/use-cases/projects/GetProject';
-import UpdateProject from '../../../../src/application/use-cases/projects/UpdateProject';
-import DeleteProject from '../../../../src/application/use-cases/projects/DeleteProject';
 import ListUserProjects from '../../../../src/application/use-cases/projects/ListUserProjects';
 import ProjectMemberRepository from '../../../../src/infrastructure/database/postgresql/ProjectMemberRepository';
 import { AuthRequest } from '../../../../src/presentation/middleware/authMiddleware';

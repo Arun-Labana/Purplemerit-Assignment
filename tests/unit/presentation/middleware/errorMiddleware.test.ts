@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { errorMiddleware } from '../../../../src/presentation/middleware/errorMiddleware';
-import { AppError, ValidationError, NotFoundError } from '../../../../src/shared/errors';
+import { ValidationError, NotFoundError } from '../../../../src/shared/errors';
 import { HttpStatus } from '../../../../src/shared/constants/enums';
 import logger from '../../../../src/infrastructure/observability/logger';
 

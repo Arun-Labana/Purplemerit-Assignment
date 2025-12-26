@@ -3,7 +3,6 @@ import ProjectRepository from '../../../../../src/infrastructure/database/postgr
 import ProjectMemberRepository from '../../../../../src/infrastructure/database/postgresql/ProjectMemberRepository';
 import CacheService from '../../../../../src/infrastructure/database/redis/CacheService';
 import { NotFoundError, ForbiddenError } from '../../../../../src/shared/errors';
-import logger from '../../../../../src/infrastructure/observability/logger';
 
 jest.mock('../../../../../src/infrastructure/database/postgresql/ProjectRepository');
 jest.mock('../../../../../src/infrastructure/database/postgresql/ProjectMemberRepository');

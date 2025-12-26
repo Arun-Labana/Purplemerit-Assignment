@@ -9,12 +9,13 @@ export class Email {
 
   private validate(email: string): string {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const trimmedEmail = email ? email.trim() : '';
     
-    if (!email || !emailRegex.test(email)) {
+    if (!trimmedEmail || !emailRegex.test(trimmedEmail)) {
       throw new ValidationError('Invalid email format');
     }
 
-    return email.toLowerCase().trim();
+    return trimmedEmail.toLowerCase();
   }
 
   getValue(): string {

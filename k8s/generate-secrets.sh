@@ -16,7 +16,8 @@ echo "JWT_REFRESH_SECRET: $JWT_REFRESH_SECRET"
 echo ""
 
 # Prompt for database passwords
-read -sp "Enter PostgreSQL password: " DB_PASSWORD
+read -sp "Enter PostgreSQL password (default: postgres): " DB_PASSWORD
+DB_PASSWORD=${DB_PASSWORD:-postgres}
 echo ""
 read -sp "Enter MongoDB password (or press Enter to skip): " MONGO_PASSWORD
 echo ""
@@ -32,6 +33,7 @@ kubectl create namespace collaborative-workspace --dry-run=client -o yaml | kube
 kubectl create secret generic app-secrets \
   --from-literal=JWT_SECRET="$JWT_SECRET" \
   --from-literal=JWT_REFRESH_SECRET="$JWT_REFRESH_SECRET" \
+  --from-literal=POSTGRES_PASSWORD="$DB_PASSWORD" \
   --from-literal=DATABASE_PASSWORD="${DB_PASSWORD:-}" \
   --from-literal=MONGODB_PASSWORD="${MONGO_PASSWORD:-}" \
   --from-literal=REDIS_PASSWORD="${REDIS_PASSWORD:-}" \

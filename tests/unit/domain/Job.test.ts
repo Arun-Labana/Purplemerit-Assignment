@@ -6,7 +6,7 @@ describe('Job Entity', () => {
   const validJobData = {
     id: '123e4567-e89b-12d3-a456-426614174000',
     workspaceId: 'workspace-123',
-    type: JobType.DATA_PROCESSING,
+    type: JobType.CODE_EXECUTION,
     status: JobStatus.PENDING,
     retries: 0,
     maxRetries: 3,
