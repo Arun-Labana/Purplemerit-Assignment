@@ -7,7 +7,7 @@ services:
     name: collab-workspace-api
     env: node
     region: oregon
-    plan: starter
+    # Free tier - no plan specified
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
@@ -53,7 +53,7 @@ services:
     name: collab-workspace-worker
     env: node
     region: oregon
-    plan: starter
+    # Free tier - no plan specified
     buildCommand: npm install && npm run build
     startCommand: npm run worker
     envVars:
@@ -76,17 +76,9 @@ services:
         value: info
 
 databases:
-  # PostgreSQL Database
-  - name: collab-postgres
-    databaseName: collaborative_workspace
-    user: collab_user
-    plan: starter
-    region: oregon
-    ipAllowList: []
-
-  # Redis
-  - name: collab-redis
-    plan: starter
-    region: oregon
-    ipAllowList: []
+  # Note: Render free tier doesn't include databases
+  # Use external free databases instead:
+  # - PostgreSQL: Use Supabase (free) or Neon (free)
+  # - Redis: Use Upstash (free tier) or Redis Cloud (free)
+  # Or remove databases section and use external services only
 
