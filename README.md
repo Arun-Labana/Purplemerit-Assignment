@@ -160,6 +160,35 @@ docker build -t collaborative-workspace .
 docker run -p 3000:3000 --env-file .env collaborative-workspace
 ```
 
+### Using Docker Compose
+
+```bash
+# Start all services
+docker-compose up -d
+
+# Run migrations
+npm run migrate
+```
+
+### Using Kubernetes (Cloud-Ready, Scalable)
+
+For production-grade cloud deployment with auto-scaling:
+
+```bash
+# See k8s/README.md for detailed instructions
+kubectl apply -k k8s/
+```
+
+The Kubernetes deployment includes:
+- **Auto-scaling**: HorizontalPodAutoscaler (3-10 API pods, 2-5 worker pods)
+- **Health checks**: Liveness, readiness, and startup probes
+- **Rolling updates**: Zero-downtime deployments
+- **Service discovery**: Internal ClusterIP services
+- **Ingress**: External routing with TLS termination
+- **Resource management**: CPU and memory limits
+
+See `k8s/README.md` for complete Kubernetes deployment guide.
+
 ### Environment Variables
 
 See `.env.example` for all required environment variables.

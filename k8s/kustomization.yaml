@@ -1,0 +1,28 @@
+# Kustomization file for managing Kubernetes resources
+# Usage: kubectl apply -k k8s/
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: collaborative-workspace
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - secrets.yaml
+  - api-deployment.yaml
+  - worker-deployment.yaml
+  - api-service.yaml
+  - hpa.yaml
+  - ingress.yaml
+
+# Common labels for all resources
+commonLabels:
+  app: collaborative-workspace
+  managed-by: kustomize
+
+# Image transformations (update image name/version)
+images:
+  - name: your-registry/collaborative-workspace
+    newName: your-registry/collaborative-workspace
+    newTag: latest
+

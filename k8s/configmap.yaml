@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: collaborative-workspace
+  labels:
+    app: collaborative-workspace
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  API_VERSION: "v1"
+  JWT_EXPIRES_IN: "15m"
+  JWT_REFRESH_EXPIRES_IN: "7d"
+  CORS_ORIGIN: "https://your-frontend-domain.com"
+  LOG_LEVEL: "info"
+  RATE_LIMIT_WINDOW_MS: "900000"
+  RATE_LIMIT_MAX_REQUESTS: "50"
+  # Database URLs - Replace with your actual database service names
+  # For managed databases (Cloud SQL, RDS, etc.), use external connection strings
+  DATABASE_URL: "postgresql://user:password@postgres-service:5432/collaborative_workspace"
+  MONGODB_URI: "mongodb://mongodb-service:27017/collaborative_workspace"
+  REDIS_URL: "redis://redis-service:6379"
+  RABBITMQ_URL: "amqp://user:password@rabbitmq-service:5672"
+

@@ -1,5 +1,32 @@
 # Collaborative Workspace Backend - Deployment Guide
 
+This guide covers multiple deployment options for the Collaborative Workspace Backend:
+
+1. **Render Deployment** (Simplified PaaS)
+2. **Kubernetes Deployment** (Cloud-ready, scalable architecture)
+
+## Kubernetes Deployment
+
+For production-grade cloud deployment with auto-scaling and high availability, see [k8s/README.md](./k8s/README.md).
+
+The Kubernetes deployment includes:
+- ✅ Horizontal Pod Autoscaling (3-10 API pods, 2-5 worker pods)
+- ✅ Health checks (liveness, readiness, startup probes)
+- ✅ Rolling updates (zero-downtime deployments)
+- ✅ Service discovery and load balancing
+- ✅ Ingress with TLS termination
+- ✅ Resource management and limits
+- ✅ Production-ready configuration
+
+**Quick Start:**
+```bash
+# Update configuration files in k8s/ directory
+# Then deploy:
+kubectl apply -k k8s/
+```
+
+---
+
 ## Render Deployment
 
 ### Prerequisites
