@@ -1,0 +1,50 @@
+About PurpleMerit
+PurpleMerit is a technology and AI-driven company based in Bangalore, transforming how businesses scale and operate. We empower founders and teams with intelligent, cost-efficient software and AI solutions that simplify complex processes and enhance productivity. Our goal is to enable innovation through clarity, trust, growth, and impact—helping startups and enterprises turn bold ideas into market-leading success stories.
+
+Tech Stack
+Languages: JavaScript/TypeScript or Python (both is a bonus)
+
+Frontend: React + Next.js (App Router), Tailwind/shadcn, Monaco Editor
+
+Backend: Node.js (Express/Fastify) or FastAPI; REST + WebSockets
+
+Backend Development Role Description
+Design, develop, and maintain scalable, high-performance server-side applications and APIs integrated with front-end and third-party systems.
+Build and maintain RESTful and microservice APIs that support internal and external integrations.
+Implement and manage data storage solutions, including relational and non-relational databases, ensuring efficiency and data integrity.
+Write and execute unit and integration tests (e.g., JUnit, Mocha). Debug, identify, and fix performance bottlenecks.
+Monitor emerging technologies, frameworks, and backend trends to continuously enhance performance and architecture.
+Ensure all deliverables meet production standards, including security, scalability, documentation, and deployment readiness.
+Core Requirements
+1–4 years of proven backend development experience in production environments.
+Strong proficiency in JavaScript and/or Node.js.
+Expertise with both relational databases (MySQL, PostgreSQL) and non-relational databases (MongoDB, Cassandra, Redis).
+Deep understanding of microservices architecture and API-first design principles.
+Experience deploying applications on AWS, Azure, or GCP, with working knowledge of CI/CD pipelines and containerization (Docker, Kubernetes).
+Proficiency in API security protocols (OAuth, JWT) and general web application security practices.
+Strong understanding of Git workflows, including versioning, branching, and merging.
+Experience writing automated tests using frameworks such as JUnit, Mockito, or Mocha.
+Knowledge of caching mechanisms (Redis, Memcached), load balancing, and horizontal scaling techniques.
+Experience with message brokers like RabbitMQ, Kafka, or AWS SQS for asynchronous communication.
+Familiarity with Serverless architectures (AWS Lambda, Azure Functions).
+Work Conditions
+This is a full-time, on-site role (Mon–Sat, 9 AM–6 PM IST) designed for people who love building in a high-energy, tight-knit startup setting.
+During the probation period, candidates are required to use their own laptop; an office laptop will not be provided initially.
+Strong remote communication skills and experience working in distributed teams are essential.
+Candidates must be self-motivated, independent, and able to manage time and meet deadlines without supervision.
+Culture and Values
+PurpleMerit is an equal-opportunity employer where difference isn't just accepted—it's a feature, not a bug. We bring together engineers, dreamers, tinkerers, and rebels to build AI that actually moves the world forward. Inclusivity isn't a policy for us; it's our core architecture.
+
+Why Join PurpleMerit?
+Make direct impact—your work shapes real products and business outcomes.
+Work on-site with agile, collaborative teams in Bangalore.
+Leverage cutting-edge technologies and AI tools.
+Continuous learning: fresh challenges, mentorship, and growth opportunities.
+Inclusive culture: diversity valued, fresh perspectives encouraged.
+End-to-end ownership: you architect, build, deliver, and learn in every project.
+PurpleMerit values diversity and believes that innovative ideas come from a mix of backgrounds and talents. We are committed to building an inclusive environment for all employees.
+
+If you are passionate about building impactful backend systems and eager to work in an AI-driven startup, apply now and start your career with PurpleMerit!
+
+Apply now to start your career with PurpleMerit!
+
