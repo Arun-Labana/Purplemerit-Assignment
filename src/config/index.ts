@@ -72,8 +72,8 @@ const config: IConfig = {
     origin: (process.env.CORS_ORIGIN || 'http://localhost:3000,http://localhost:3001').split(','),
   },
   rateLimit: {
-    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10),
-    maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '50', 10),
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000', 10),
+    maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100', 10),
   },
   logging: {
     level: process.env.LOG_LEVEL || 'info',

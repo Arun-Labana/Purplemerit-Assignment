@@ -13,8 +13,8 @@ data:
   JWT_REFRESH_EXPIRES_IN: "7d"
   CORS_ORIGIN: "https://your-frontend-domain.com"
   LOG_LEVEL: "info"
-  RATE_LIMIT_WINDOW_MS: "900000"
-  RATE_LIMIT_MAX_REQUESTS: "50"
+  RATE_LIMIT_WINDOW_MS: "60000"
+  RATE_LIMIT_MAX_REQUESTS: "100"
   # Database URLs - Update with your actual database connection strings
   # For managed databases (Cloud SQL, RDS, etc.), use external connection strings
   # For in-cluster services, use service names (e.g., postgres-service:5432)
