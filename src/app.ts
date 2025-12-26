@@ -119,12 +119,21 @@ app.get('/metrics', async (_req: Request, res: Response) => {
 });
 
 // API Documentation
+const swaggerServerUrl = process.env.API_BASE_URL || (process.env.NODE_ENV === 'production' 
+  ? 'https://collab-workspace-api-production.up.railway.app'
+  : `http://localhost:${config.app.port}`);
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
   explorer: true,
   customCss: '.swagger-ui .topbar { display: none }',
   swaggerOptions: {
     persistAuthorization: true,
+    // Force Swagger UI to use the correct server URL
+    url: swaggerServerUrl,
+    supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+    validatorUrl: null, // Disable validator
   },
+  customSiteTitle: 'Collaborative Workspace API',
 }));
 
 // API routes
