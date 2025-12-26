@@ -11,13 +11,15 @@ export class CreateProject {
       // Create project
       const projectRecord = await ProjectRepository.create(projectData, userId);
 
-      // Log activity
-      await ActivityLogRepository.create({
+      // Log activity (non-blocking - don't fail project creation if logging fails)
+      ActivityLogRepository.create({
         workspaceId: projectRecord.id, // Using project as workspace context
         userId,
         action: ActivityType.PROJECT_CREATED,
         details: { projectName: projectData.name },
         timestamp: new Date(),
+      }).catch((error) => {
+        logger.warn('Failed to log activity', { projectId: projectRecord.id, error });
       });
 
       logger.info('Project created successfully', { projectId: projectRecord.id, userId });

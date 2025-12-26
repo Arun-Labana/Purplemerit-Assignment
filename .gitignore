@@ -91,3 +91,13 @@ dump.rdb
 .temp/
 .tmp/
 
+# Test and temporary files
+test-results.log
+*.log
+*.bak
+*.bak2
+*.old
+setup-node-and-test.sh
+run-all-tests.sh
+JEST_ISSUE.md
+

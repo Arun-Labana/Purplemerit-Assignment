@@ -14,6 +14,7 @@ const JobResultSchema = new Schema<IJobResultDocument>(
       type: String,
       required: true,
       unique: true,
+      index: true, // unique: true already creates an index, but we keep this for clarity
     },
     inputPayload: {
       type: Schema.Types.Mixed,
@@ -38,7 +39,7 @@ const JobResultSchema = new Schema<IJobResultDocument>(
 );
 
 // Index for efficient queries
-JobResultSchema.index({ jobId: 1 });
+// Note: jobId index is already created by unique: true, so we don't duplicate it
 JobResultSchema.index({ createdAt: -1 });
 
 export const JobResultModel = mongoose.model<IJobResultDocument>('JobResult', JobResultSchema);

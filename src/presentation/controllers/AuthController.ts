@@ -11,12 +11,12 @@ import { SUCCESS_MESSAGES } from '../../shared/constants';
 export class AuthController {
   async register(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const tokens = await RegisterUser.execute(req.body);
+      const result = await RegisterUser.execute(req.body);
 
       res.status(HttpStatus.CREATED).json({
         success: true,
         message: SUCCESS_MESSAGES.USER_REGISTERED,
-        data: tokens,
+        data: result,
       });
     } catch (error) {
       next(error);

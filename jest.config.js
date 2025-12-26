@@ -1,10 +1,10 @@
-/** @type {import('jest').Config} */
 module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/tests', '<rootDir>/src'],
   testMatch: ['**/*.test.ts', '**/*.spec.ts'],
-  transform: {
-    '^.+\\.ts$': require.resolve('ts-jest'),
+  preset: 'ts-jest',
+  moduleNameMapper: {
+    '^ts-jest$': '<rootDir>/node_modules/ts-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'json'],
   collectCoverageFrom: [
@@ -23,5 +23,5 @@ module.exports = {
   },
   coverageDirectory: 'coverage',
   verbose: true,
+  testTimeout: 10000,
 };
-

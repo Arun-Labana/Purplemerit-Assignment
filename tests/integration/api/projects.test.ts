@@ -6,15 +6,18 @@ describe('Projects API Integration Tests', () => {
   let userId: string;
 
   beforeAll(async () => {
-    // Register and login to get token
+    // Register and login to get token - use unique email
+    const uniqueEmail = `projects-${Date.now()}@example.com`;
     const registerResponse = await request(app)
       .post('/api/v1/auth/register')
       .send({
-        email: 'projects@example.com',
+        email: uniqueEmail,
         name: 'Projects User',
         password: 'TestPassword123!',
       });
 
+    expect(registerResponse.status).toBe(201);
+    expect(registerResponse.body.data.user).toBeDefined();
     accessToken = registerResponse.body.data.accessToken;
     userId = registerResponse.body.data.user.id;
   });

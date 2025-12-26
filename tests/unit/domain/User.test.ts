@@ -1,5 +1,4 @@
 import { User } from '../../../src/domain/entities/User';
-import { UserRole } from '../../../src/shared/constants/enums';
 
 describe('User Entity', () => {
   const validUserData = {

@@ -83,8 +83,16 @@ export class JWTUtil {
    */
   static getTokenExpiryInSeconds(expiresIn: string): number {
     // Parse strings like '15m', '7d', '1h'
+    if (!expiresIn || typeof expiresIn !== 'string' || expiresIn.length < 2) {
+      return 900; // Default 15 minutes
+    }
+
     const unit = expiresIn.slice(-1);
     const value = parseInt(expiresIn.slice(0, -1), 10);
+
+    if (isNaN(value)) {
+      return 900; // Default 15 minutes
+    }
 
     switch (unit) {
       case 's':

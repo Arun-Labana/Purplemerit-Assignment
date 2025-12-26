@@ -4,10 +4,12 @@ import app from '../../../src/app';
 describe('Auth API Integration Tests', () => {
   describe('POST /api/v1/auth/register', () => {
     it('should register a new user successfully', async () => {
+      // Use unique email to avoid conflicts
+      const uniqueEmail = `test-${Date.now()}@example.com`;
       const response = await request(app)
         .post('/api/v1/auth/register')
         .send({
-          email: 'test@example.com',
+          email: uniqueEmail,
           name: 'Test User',
           password: 'TestPassword123!',
         });
@@ -15,7 +17,7 @@ describe('Auth API Integration Tests', () => {
       expect(response.status).toBe(201);
       expect(response.body.success).toBe(true);
       expect(response.body.data.user).toBeDefined();
-      expect(response.body.data.user.email).toBe('test@example.com');
+      expect(response.body.data.user.email).toBe(uniqueEmail);
       expect(response.body.data.accessToken).toBeDefined();
       expect(response.body.data.refreshToken).toBeDefined();
     });
@@ -86,11 +88,12 @@ describe('Auth API Integration Tests', () => {
 
   describe('POST /api/v1/auth/refresh', () => {
     it('should refresh access token with valid refresh token', async () => {
-      // Register and get tokens
+      // Register and get tokens - use unique email
+      const uniqueEmail = `refresh-${Date.now()}@example.com`;
       const registerResponse = await request(app)
         .post('/api/v1/auth/register')
         .send({
-          email: 'refresh@example.com',
+          email: uniqueEmail,
           name: 'Refresh User',
           password: 'TestPassword123!',
         });
