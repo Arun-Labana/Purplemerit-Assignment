@@ -19,7 +19,17 @@ const app: Application = express();
 app.set('trust proxy', 1);
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", process.env.API_BASE_URL || `http://localhost:${config.app.port}`].filter(Boolean),
+    },
+  },
+}));
 app.use(
   cors({
     origin: config.cors.origin,
