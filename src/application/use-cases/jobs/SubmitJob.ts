@@ -2,6 +2,7 @@ import JobRepository from '../../../infrastructure/database/postgresql/JobReposi
 import JobResultRepository from '../../../infrastructure/database/mongodb/JobResultRepository';
 import WorkspaceRepository from '../../../infrastructure/database/postgresql/WorkspaceRepository';
 import ProjectMemberRepository from '../../../infrastructure/database/postgresql/ProjectMemberRepository';
+import rabbitmqPublisher from '../../../infrastructure/messaging/rabbitmq/publisher';
 import { IJobCreate } from '../../../shared/types';
 import { Job } from '../../../domain/entities/Job';
 import { Role } from '../../../domain/value-objects/Role';
@@ -39,7 +40,13 @@ export class SubmitJob {
         errors: [],
       });
 
-      // TODO: Publish job to RabbitMQ queue (will be implemented next)
+      // Publish job to RabbitMQ queue
+      await rabbitmqPublisher.publishJob(
+        jobRecord.id,
+        jobData.workspaceId,
+        jobData.type,
+        jobData.payload
+      );
 
       logger.info('Job submitted successfully', { jobId: jobRecord.id, type: jobData.type, userId });
 

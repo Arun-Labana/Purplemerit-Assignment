@@ -4,6 +4,7 @@ import logger from './infrastructure/observability/logger';
 import pgDatabase from './infrastructure/database/postgresql/connection';
 import mongoDatabase from './infrastructure/database/mongodb/connection';
 import redisClient from './infrastructure/database/redis/connection';
+import rabbitmqConnection from './infrastructure/messaging/rabbitmq/connection';
 import featureFlagService from './infrastructure/database/redis/FeatureFlagService';
 
 const PORT = config.app.port;
@@ -27,6 +28,9 @@ async function startServer() {
     if (!redisConnected) {
       throw new Error('Redis connection failed');
     }
+
+    // Connect to RabbitMQ
+    await rabbitmqConnection.connect();
 
     logger.info('All database connections successful');
 
@@ -57,6 +61,7 @@ async function startServer() {
           await pgDatabase.close();
           await mongoDatabase.close();
           await redisClient.close();
+          await rabbitmqConnection.close();
           logger.info('Database connections closed');
 
           process.exit(0);
