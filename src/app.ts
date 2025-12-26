@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
+import swaggerUi from 'swagger-ui-express';
 import config from './config';
 import v1Routes from './presentation/routes/v1';
 import { errorMiddleware } from './presentation/middleware/errorMiddleware';
@@ -9,6 +10,7 @@ import { loggingMiddleware } from './presentation/middleware/loggingMiddleware';
 import { generalRateLimiter } from './presentation/middleware/rateLimitMiddleware';
 import { requestIdMiddleware } from './infrastructure/observability/tracing';
 import { register as metricsRegister } from './infrastructure/observability/metrics';
+import { swaggerSpec } from './presentation/docs/swagger';
 import logger from './infrastructure/observability/logger';
 
 const app: Application = express();
@@ -62,6 +64,12 @@ app.get('/metrics', async (_req: Request, res: Response) => {
     res.status(500).end();
   }
 });
+
+// API Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }',
+}));
 
 // API routes
 app.use(`/api/${config.app.apiVersion}`, v1Routes);
