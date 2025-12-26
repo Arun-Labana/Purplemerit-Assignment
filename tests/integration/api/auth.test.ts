@@ -95,7 +95,16 @@ describe('Auth API Integration Tests', () => {
           password: 'TestPassword123!',
         });
 
+      expect(registerResponse.status).toBe(201);
+      expect(registerResponse.body.success).toBe(true);
+      expect(registerResponse.body.data.refreshToken).toBeDefined();
+
       const refreshToken = registerResponse.body.data.refreshToken;
+      expect(refreshToken).toBeTruthy();
+      expect(typeof refreshToken).toBe('string');
+
+      // Small delay to ensure Redis has stored the token
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       // Refresh token
       const response = await request(app)
