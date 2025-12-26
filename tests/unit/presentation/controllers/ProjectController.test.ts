@@ -2,6 +2,8 @@ import { Response, NextFunction } from 'express';
 import ProjectController from '../../../../src/presentation/controllers/ProjectController';
 import CreateProject from '../../../../src/application/use-cases/projects/CreateProject';
 import GetProject from '../../../../src/application/use-cases/projects/GetProject';
+import UpdateProject from '../../../../src/application/use-cases/projects/UpdateProject';
+import DeleteProject from '../../../../src/application/use-cases/projects/DeleteProject';
 import ListUserProjects from '../../../../src/application/use-cases/projects/ListUserProjects';
 import ProjectMemberRepository from '../../../../src/infrastructure/database/postgresql/ProjectMemberRepository';
 import { AuthRequest } from '../../../../src/presentation/middleware/authMiddleware';
@@ -94,6 +96,65 @@ describe('ProjectController', () => {
       expect(statusMock).toHaveBeenCalledWith(200);
       expect(jsonMock).toHaveBeenCalled();
     });
+
+    it('should call next with error on failure', async () => {
+      const error = new Error('Get failed');
+      (GetProject.execute as jest.Mock).mockRejectedValue(error);
+
+      await ProjectController.getById(mockRequest as AuthRequest, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalledWith(error);
+    });
+  });
+
+  describe('update', () => {
+    it('should update project successfully', async () => {
+      const mockProject = new Project(
+        'project-123',
+        'Updated Project',
+        'Updated Description',
+        'user-123',
+        new Date(),
+        new Date()
+      );
+      (UpdateProject.execute as jest.Mock).mockResolvedValue(mockProject);
+
+      await ProjectController.update(mockRequest as AuthRequest, mockResponse as Response, mockNext);
+
+      expect(UpdateProject.execute).toHaveBeenCalledWith('project-123', mockRequest.body, 'user-123');
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalled();
+    });
+
+    it('should call next with error on failure', async () => {
+      const error = new Error('Update failed');
+      (UpdateProject.execute as jest.Mock).mockRejectedValue(error);
+
+      await ProjectController.update(mockRequest as AuthRequest, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalledWith(error);
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete project successfully', async () => {
+      (DeleteProject.execute as jest.Mock).mockResolvedValue(undefined);
+
+      await ProjectController.delete(mockRequest as AuthRequest, mockResponse as Response, mockNext);
+
+      expect(DeleteProject.execute).toHaveBeenCalledWith('project-123', 'user-123');
+      expect(statusMock).toHaveBeenCalledWith(200);
+      expect(jsonMock).toHaveBeenCalled();
+    });
+
+    it('should call next with error on failure', async () => {
+      const error = new Error('Delete failed');
+      (DeleteProject.execute as jest.Mock).mockRejectedValue(error);
+
+      await ProjectController.delete(mockRequest as AuthRequest, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalledWith(error);
+    });
   });
 
   describe('list', () => {
@@ -140,6 +201,15 @@ describe('ProjectController', () => {
       expect(ProjectMemberRepository.findByProjectId).toHaveBeenCalledWith('project-123');
       expect(statusMock).toHaveBeenCalledWith(200);
       expect(jsonMock).toHaveBeenCalled();
+    });
+
+    it('should call next with error on failure', async () => {
+      const error = new Error('Get members failed');
+      (ProjectMemberRepository.findByProjectId as jest.Mock).mockRejectedValue(error);
+
+      await ProjectController.getMembers(mockRequest as AuthRequest, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalledWith(error);
     });
   });
 });
