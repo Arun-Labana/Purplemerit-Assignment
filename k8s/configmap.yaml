@@ -15,10 +15,13 @@ data:
   LOG_LEVEL: "info"
   RATE_LIMIT_WINDOW_MS: "900000"
   RATE_LIMIT_MAX_REQUESTS: "50"
-  # Database URLs - Replace with your actual database service names
+  # Database URLs - Update with your actual database connection strings
   # For managed databases (Cloud SQL, RDS, etc.), use external connection strings
+  # For in-cluster services, use service names (e.g., postgres-service:5432)
+  # Example: DATABASE_URL: "postgresql://user:password@postgres-service:5432/collaborative_workspace"
+  # Example for Render/External: DATABASE_URL: "postgresql://user:pass@host:5432/dbname"
   DATABASE_URL: "postgresql://user:password@postgres-service:5432/collaborative_workspace"
-  MONGODB_URI: "mongodb://mongodb-service:27017/collaborative_workspace"
+  MONGODB_URI: "mongodb+srv://labanaarun0_db_user:Password1@cluster0.w7emiil.mongodb.net/collaborative_workspace?retryWrites=true&w=majority"
   REDIS_URL: "redis://redis-service:6379"
-  RABBITMQ_URL: "amqp://user:password@rabbitmq-service:5672"
+  RABBITMQ_URL: "amqps://fcsjowty:vtFpaBA2HlHoldtOA3encf__AYHDH_Ma@leopard.lmq.cloudamqp.com/fcsjowty"
 

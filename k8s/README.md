@@ -24,7 +24,27 @@ The Kubernetes deployment includes:
 
 ## Quick Start
 
-### 1. Build and Push Docker Image
+### Option 1: Automated Setup (Recommended)
+
+Use the setup script for guided deployment:
+
+```bash
+# Make scripts executable (if not already)
+chmod +x setup.sh generate-secrets.sh
+
+# Run setup script
+./setup.sh
+```
+
+The script will guide you through:
+1. Creating namespace
+2. Generating secrets
+3. Updating configuration files
+4. Deploying all resources
+
+### Option 2: Manual Setup
+
+#### 1. Build and Push Docker Image
 
 ```bash
 # Build the image
@@ -34,18 +54,14 @@ docker build -t your-registry/collaborative-workspace:latest .
 docker push your-registry/collaborative-workspace:latest
 ```
 
-### 2. Update Configuration
+#### 2. Generate Secrets
 
-Edit the following files with your actual values:
+**Option A: Using the helper script (Recommended)**
+```bash
+./generate-secrets.sh
+```
 
-- `configmap.yaml`: Update database URLs, CORS origins
-- `secrets.yaml`: Generate and set secure secrets
-- `api-deployment.yaml`: Update image registry
-- `worker-deployment.yaml`: Update image registry
-- `ingress.yaml`: Update domain name
-
-### 3. Generate Secrets
-
+**Option B: Manual generation**
 ```bash
 # Generate secure JWT secrets
 JWT_SECRET=$(openssl rand -base64 32)
@@ -59,8 +75,33 @@ kubectl create secret generic app-secrets \
   --namespace=collaborative-workspace
 ```
 
-### 4. Deploy to Kubernetes
+#### 3. Update Configuration Files
 
+Edit the following files with your actual values:
+
+- **`configmap.yaml`**: Update database URLs, CORS origins
+  - Current MongoDB URI is pre-configured (from render.yaml)
+  - Update `DATABASE_URL` if using in-cluster PostgreSQL
+  - Update `REDIS_URL` if using in-cluster Redis
+  - Update `CORS_ORIGIN` with your frontend domain
+
+- **`api-deployment.yaml`**: Update image registry (line 28)
+  - Replace `your-registry/collaborative-workspace:latest` with your actual image
+
+- **`worker-deployment.yaml`**: Update image registry (line 28)
+  - Replace `your-registry/collaborative-workspace:latest` with your actual image
+
+- **`ingress.yaml`**: Update domain name (lines 20, 23)
+  - Replace `api.your-domain.com` with your actual domain
+
+#### 4. Deploy to Kubernetes
+
+**Option A: Using Kustomize (Recommended)**
+```bash
+kubectl apply -k .
+```
+
+**Option B: Manual deployment**
 ```bash
 # Create namespace
 kubectl apply -f namespace.yaml
@@ -68,7 +109,7 @@ kubectl apply -f namespace.yaml
 # Apply ConfigMap
 kubectl apply -f configmap.yaml
 
-# Apply Secrets (or create manually as shown above)
+# Apply Secrets (if using secrets.yaml, otherwise use generate-secrets.sh)
 kubectl apply -f secrets.yaml
 
 # Deploy API server
