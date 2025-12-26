@@ -38,7 +38,27 @@ async function startServer() {
           logger.info('Tables not found, running migrations...');
           const fs = await import('fs');
           const path = await import('path');
-          const schemaPath = path.join(__dirname, '../infrastructure/database/postgresql/schema.sql');
+          // Try multiple paths for schema.sql (dev vs production)
+          const possiblePaths = [
+            path.join(__dirname, '../infrastructure/database/postgresql/schema.sql'), // Production (dist/)
+            path.join(__dirname, '../../src/infrastructure/database/postgresql/schema.sql'), // Alternative
+            path.join(process.cwd(), 'src/infrastructure/database/postgresql/schema.sql'), // From project root
+            path.join(process.cwd(), 'dist/infrastructure/database/postgresql/schema.sql'), // From project root dist
+          ];
+          
+          let schemaPath: string | null = null;
+          for (const possiblePath of possiblePaths) {
+            if (fs.existsSync(possiblePath)) {
+              schemaPath = possiblePath;
+              break;
+            }
+          }
+          
+          if (!schemaPath) {
+            throw new Error(`Schema file not found. Tried: ${possiblePaths.join(', ')}`);
+          }
+          
+          logger.info(`Loading schema from: ${schemaPath}`);
           const schema = fs.readFileSync(schemaPath, 'utf8');
           await pgDatabase.query(schema);
           logger.info('Migrations completed successfully');

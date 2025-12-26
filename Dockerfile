@@ -28,6 +28,8 @@ RUN npm ci --only=production
 
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist
+# Copy schema.sql file for migrations
+COPY --from=builder /app/src/infrastructure/database/postgresql/schema.sql ./src/infrastructure/database/postgresql/schema.sql
 
 # Expose port
 EXPOSE 3000
