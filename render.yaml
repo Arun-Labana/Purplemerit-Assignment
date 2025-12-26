@@ -88,6 +88,5 @@ databases:
   - name: collab-redis
     plan: starter
     region: oregon
-    maxmemoryPolicy: allkeys-lru
     ipAllowList: []
 
