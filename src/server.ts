@@ -1,3 +1,4 @@
+import { createServer } from 'http';
 import app from './app';
 import config from './config';
 import logger from './infrastructure/observability/logger';
@@ -6,6 +7,7 @@ import mongoDatabase from './infrastructure/database/mongodb/connection';
 import redisClient from './infrastructure/database/redis/connection';
 import rabbitmqConnection from './infrastructure/messaging/rabbitmq/connection';
 import featureFlagService from './infrastructure/database/redis/FeatureFlagService';
+import WebSocketServer from './infrastructure/websocket/socketServer';
 
 const PORT = config.app.port;
 
@@ -38,8 +40,15 @@ async function startServer() {
     await featureFlagService.initializeDefaults();
     logger.info('Feature flags initialized');
 
+    // Create HTTP server
+    const httpServer = createServer(app);
+
+    // Initialize WebSocket server
+    const wsServer = new WebSocketServer(httpServer, config.cors.origin);
+    logger.info('WebSocket server initialized');
+
     // Start HTTP server
-    const server = app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       logger.info(`Server started successfully`, {
         port: PORT,
         environment: config.app.env,
@@ -48,13 +57,14 @@ async function startServer() {
       logger.info(`API Documentation: http://localhost:${PORT}/api-docs`);
       logger.info(`Health Check: http://localhost:${PORT}/health`);
       logger.info(`Metrics: http://localhost:${PORT}/metrics`);
+      logger.info(`WebSocket: ws://localhost:${PORT}`);
     });
 
     // Graceful shutdown
     const gracefulShutdown = async (signal: string) => {
       logger.info(`${signal} received, starting graceful shutdown`);
 
-      server.close(async () => {
+      httpServer.close(async () => {
         logger.info('HTTP server closed');
 
         try {
