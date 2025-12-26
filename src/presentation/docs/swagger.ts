@@ -15,12 +15,8 @@ const options: swaggerJsdoc.Options = {
     },
     servers: [
       {
-        url: `http://localhost:${config.app.port}`,
-        description: 'Development server',
-      },
-      {
-        url: 'https://your-app.onrender.com',
-        description: 'Production server',
+        url: process.env.API_BASE_URL || `http://localhost:${config.app.port}`,
+        description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server',
       },
     ],
     components: {
