@@ -1,6 +1,6 @@
 module.exports = {
   testEnvironment: 'node',
-  roots: ['<rootDir>/tests'],
+  roots: ['<rootDir>/tests', '<rootDir>/src'],
   testMatch: ['**/*.test.ts', '**/*.spec.ts'],
   preset: 'ts-jest',
   moduleFileExtensions: ['ts', 'js', 'json'],
