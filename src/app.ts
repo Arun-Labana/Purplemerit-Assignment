@@ -43,6 +43,34 @@ app.use(loggingMiddleware);
 // Rate limiting
 app.use(generalRateLimiter);
 
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Health check endpoint
+ *     tags: [Health]
+ *     description: Check if the server is running and healthy
+ *     responses:
+ *       200:
+ *         description: Server is healthy
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Server is healthy
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ *                 environment:
+ *                   type: string
+ *                   example: production
+ */
 // Health check (before API routes)
 app.get('/health', (_req: Request, res: Response) => {
   res.json({
