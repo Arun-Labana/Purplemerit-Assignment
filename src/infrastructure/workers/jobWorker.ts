@@ -1,4 +1,3 @@
-import rabbitmqConnection from '../messaging/rabbitmq/connection';
 import rabbitmqConsumer from '../messaging/rabbitmq/consumer';
 import JobRepository from '../database/postgresql/JobRepository';
 import JobResultRepository from '../database/mongodb/JobResultRepository';
@@ -12,7 +11,7 @@ export class JobWorker {
     logger.info('Starting job worker...');
 
     await rabbitmqConsumer.consumeJobs(async (message) => {
-      const { jobId, type, payload, attempt = 0 } = message;
+      const { jobId, type, payload } = message;
 
       try {
         // Update job status to processing

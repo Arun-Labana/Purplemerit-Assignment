@@ -1,4 +1,3 @@
-import config from './config';
 import logger from './infrastructure/observability/logger';
 import mongoDatabase from './infrastructure/database/mongodb/connection';
 import rabbitmqConnection from './infrastructure/messaging/rabbitmq/connection';

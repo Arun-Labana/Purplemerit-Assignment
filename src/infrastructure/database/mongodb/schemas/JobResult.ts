@@ -1,7 +1,12 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IJobResult } from '../../../shared/types';
 
-export interface IJobResultDocument extends IJobResult, Document {}
+export interface IJobResultDocument extends Document {
+  jobId: string;
+  inputPayload: any;
+  outputResult: any;
+  logs: string[];
+  errorMessages: string[];
+}
 
 const JobResultSchema = new Schema<IJobResultDocument>(
   {
@@ -23,17 +28,20 @@ const JobResultSchema = new Schema<IJobResultDocument>(
       type: [String],
       default: [],
     },
-    errors: {
+    errorMessages: {
       type: [String],
       default: [],
     },
-  },
+  } as any,
   {
     timestamps: true,
   }
 );
 
+// Index for efficient queries
+JobResultSchema.index({ jobId: 1 });
+JobResultSchema.index({ createdAt: -1 });
+
 export const JobResultModel = mongoose.model<IJobResultDocument>('JobResult', JobResultSchema);
 
 export default JobResultModel;
-

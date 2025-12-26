@@ -44,7 +44,7 @@ async function startServer() {
     const httpServer = createServer(app);
 
     // Initialize WebSocket server
-    const wsServer = new WebSocketServer(httpServer, config.cors.origin);
+    new WebSocketServer(httpServer, config.cors.origin);
     logger.info('WebSocket server initialized');
 
     // Start HTTP server

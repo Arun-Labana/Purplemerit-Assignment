@@ -5,7 +5,13 @@ import logger from '../../observability/logger';
 export class CollaborationEventRepository {
   async create(eventData: ICollaborationEvent): Promise<void> {
     try {
-      await CollaborationEventModel.create(eventData);
+      await CollaborationEventModel.create({
+        workspaceId: eventData.workspaceId,
+        userId: eventData.userId,
+        eventType: eventData.eventType,
+        payload: eventData.payload,
+        timestamp: eventData.timestamp,
+      } as any);
     } catch (error) {
       logger.error('Error creating collaboration event', { eventData, error });
       throw error;
@@ -23,7 +29,7 @@ export class CollaborationEventRepository {
         .limit(limit)
         .skip(skip)
         .lean();
-      return events;
+      return events as any as ICollaborationEvent[];
     } catch (error) {
       logger.error('Error finding collaboration events', { workspaceId, error });
       throw error;

@@ -1,7 +1,12 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { ICollaborationEvent } from '../../../shared/types';
 
-export interface ICollaborationEventDocument extends ICollaborationEvent, Document {}
+export interface ICollaborationEventDocument extends Document {
+  workspaceId: string;
+  userId: string;
+  eventType: string;
+  payload: any;
+  timestamp: Date;
+}
 
 const CollaborationEventSchema = new Schema<ICollaborationEventDocument>(
   {
@@ -13,7 +18,6 @@ const CollaborationEventSchema = new Schema<ICollaborationEventDocument>(
     userId: {
       type: String,
       required: true,
-      index: true,
     },
     eventType: {
       type: String,
@@ -27,15 +31,17 @@ const CollaborationEventSchema = new Schema<ICollaborationEventDocument>(
       type: Date,
       default: Date.now,
       index: true,
+      expires: 7 * 24 * 60 * 60, // 7 days TTL
     },
-  },
+  } as any,
   {
     timestamps: false,
   }
 );
 
-// Compound index for efficient queries
+// Index for efficient queries
 CollaborationEventSchema.index({ workspaceId: 1, timestamp: -1 });
+CollaborationEventSchema.index({ workspaceId: 1, eventType: 1 });
 
 export const CollaborationEventModel = mongoose.model<ICollaborationEventDocument>(
   'CollaborationEvent',
@@ -43,4 +49,3 @@ export const CollaborationEventModel = mongoose.model<ICollaborationEventDocumen
 );
 
 export default CollaborationEventModel;
-

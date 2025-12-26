@@ -4,7 +4,7 @@ import ActivityLogRepository from '../../../infrastructure/database/mongodb/Acti
 import { Role } from '../../../domain/value-objects/Role';
 import { UserRole } from '../../../shared/constants/enums';
 import { NotFoundError, ValidationError } from '../../../shared/errors';
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../../../shared/constants';
+import { ERROR_MESSAGES } from '../../../shared/constants';
 import { ActivityType } from '../../../shared/constants/enums';
 import logger from '../../../infrastructure/observability/logger';
 

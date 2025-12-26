@@ -5,7 +5,13 @@ import logger from '../../observability/logger';
 export class ActivityLogRepository {
   async create(activityData: IActivityLog): Promise<void> {
     try {
-      await ActivityLogModel.create(activityData);
+      await ActivityLogModel.create({
+        workspaceId: activityData.workspaceId,
+        userId: activityData.userId,
+        action: activityData.action,
+        details: activityData.details,
+        timestamp: activityData.timestamp,
+      } as any);
     } catch (error) {
       logger.error('Error creating activity log', { activityData, error });
       throw error;
@@ -23,7 +29,7 @@ export class ActivityLogRepository {
         .limit(limit)
         .skip(skip)
         .lean();
-      return logs;
+      return logs as any as IActivityLog[];
     } catch (error) {
       logger.error('Error finding activity logs by workspace', { workspaceId, error });
       throw error;
@@ -37,7 +43,7 @@ export class ActivityLogRepository {
         .limit(limit)
         .skip(skip)
         .lean();
-      return logs;
+      return logs as any as IActivityLog[];
     } catch (error) {
       logger.error('Error finding activity logs by user', { userId, error });
       throw error;

@@ -11,7 +11,7 @@ export class JWTUtil {
   static generateAccessToken(payload: ITokenPayload): string {
     try {
       const options: SignOptions = {
-        expiresIn: config.jwt.expiresIn,
+        expiresIn: config.jwt.expiresIn as any,
       };
       return jwt.sign(payload, config.jwt.secret, options);
     } catch (error) {
@@ -26,7 +26,7 @@ export class JWTUtil {
   static generateRefreshToken(payload: ITokenPayload): string {
     try {
       const options: SignOptions = {
-        expiresIn: config.jwt.refreshExpiresIn,
+        expiresIn: config.jwt.refreshExpiresIn as any,
       };
       return jwt.sign(payload, config.jwt.refreshSecret, options);
     } catch (error) {

@@ -18,16 +18,16 @@ class RabbitMQConnection {
 
   public async connect(): Promise<void> {
     try {
-      this.connection = await amqp.connect(config.rabbitmq.url);
-      this.channel = await this.connection.createChannel();
+      this.connection = await amqp.connect(config.rabbitmq.url) as any;
+      this.channel = await (this.connection as any).createChannel();
 
       logger.info('RabbitMQ connected successfully');
 
-      this.connection.on('error', (err) => {
+      (this.connection as any).on('error', (err: Error) => {
         logger.error('RabbitMQ connection error', err);
       });
 
-      this.connection.on('close', () => {
+      (this.connection as any).on('close', () => {
         logger.warn('RabbitMQ connection closed');
       });
 
@@ -65,7 +65,7 @@ class RabbitMQConnection {
   public async close(): Promise<void> {
     try {
       await this.channel?.close();
-      await this.connection?.close();
+      await (this.connection as any)?.close();
       logger.info('RabbitMQ connection closed');
     } catch (error) {
       logger.error('Error closing RabbitMQ connection', error);

@@ -5,7 +5,13 @@ import logger from '../../observability/logger';
 export class JobResultRepository {
   async create(jobResultData: IJobResult): Promise<void> {
     try {
-      await JobResultModel.create(jobResultData);
+      await JobResultModel.create({
+        jobId: jobResultData.jobId,
+        inputPayload: jobResultData.inputPayload,
+        outputResult: jobResultData.outputResult,
+        logs: jobResultData.logs,
+        errorMessages: jobResultData.errors,
+      } as any);
     } catch (error) {
       logger.error('Error creating job result', { jobResultData, error });
       throw error;
@@ -15,7 +21,7 @@ export class JobResultRepository {
   async findByJobId(jobId: string): Promise<IJobResult | null> {
     try {
       const result = await JobResultModel.findOne({ jobId }).lean();
-      return result;
+      return result as any as IJobResult | null;
     } catch (error) {
       logger.error('Error finding job result', { jobId, error });
       throw error;
@@ -27,7 +33,7 @@ export class JobResultRepository {
       const result = await JobResultModel.findOneAndUpdate({ jobId }, updates, {
         new: true,
       }).lean();
-      return result;
+      return result as any as IJobResult | null;
     } catch (error) {
       logger.error('Error updating job result', { jobId, updates, error });
       throw error;
@@ -45,7 +51,7 @@ export class JobResultRepository {
 
   async addError(jobId: string, errorMessage: string): Promise<void> {
     try {
-      await JobResultModel.findOneAndUpdate({ jobId }, { $push: { errors: errorMessage } });
+      await JobResultModel.findOneAndUpdate({ jobId }, { $push: { errorMessages: errorMessage } });
     } catch (error) {
       logger.error('Error adding job error', { jobId, errorMessage, error });
       throw error;

@@ -1,8 +1,12 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IActivityLog } from '../../../shared/types';
-import { APP_CONSTANTS } from '../../../shared/constants';
 
-export interface IActivityLogDocument extends IActivityLog, Document {}
+export interface IActivityLogDocument extends Document {
+  workspaceId: string;
+  userId: string;
+  action: string;
+  details: any;
+  timestamp: Date;
+}
 
 const ActivityLogSchema = new Schema<IActivityLogDocument>(
   {
@@ -28,9 +32,9 @@ const ActivityLogSchema = new Schema<IActivityLogDocument>(
       type: Date,
       default: Date.now,
       index: true,
-      expires: APP_CONSTANTS.MONGODB_ACTIVITY_LOG_TTL_DAYS * 24 * 60 * 60, // TTL index
+      expires: 90 * 24 * 60 * 60, // 90 days TTL
     },
-  },
+  } as any,
   {
     timestamps: false,
   }
@@ -43,4 +47,3 @@ ActivityLogSchema.index({ userId: 1, timestamp: -1 });
 export const ActivityLogModel = mongoose.model<IActivityLogDocument>('ActivityLog', ActivityLogSchema);
 
 export default ActivityLogModel;
-

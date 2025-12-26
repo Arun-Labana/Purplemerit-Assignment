@@ -1,8 +1,8 @@
 import { Server as HttpServer } from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
-import { JWTUtil } from '../../../shared/utils';
-import logger from '../../observability/logger';
-import { websocketConnections } from '../../observability/metrics';
+import { JWTUtil } from '../../shared/utils';
+import logger from '../observability/logger';
+import { websocketConnections } from '../observability/metrics';
 
 export class WebSocketServer {
   private io: SocketIOServer;
