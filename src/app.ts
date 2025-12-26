@@ -18,7 +18,13 @@ const app: Application = express();
 // Trust proxy
 app.set('trust proxy', 1);
 
-// Security middleware
+// Security middleware - CSP configured to allow Swagger UI
+const railwayDomain = process.env.API_BASE_URL 
+  ? new URL(process.env.API_BASE_URL).origin 
+  : (process.env.NODE_ENV === 'production' 
+    ? 'https://collab-workspace-api-production.up.railway.app'
+    : `http://localhost:${config.app.port}`);
+
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -28,11 +34,14 @@ app.use(helmet({
       imgSrc: ["'self'", "data:", "https:"],
       connectSrc: [
         "'self'",
-        process.env.API_BASE_URL || `https://${process.env.RAILWAY_PUBLIC_DOMAIN || 'collab-workspace-api-production.up.railway.app'}`,
-        `http://localhost:${config.app.port}`,
+        railwayDomain,
+        "https://collab-workspace-api-production.up.railway.app",
         "https://*.up.railway.app",
-      ].filter(Boolean),
+        "http://localhost:*",
+        "https://localhost:*",
+      ],
       fontSrc: ["'self'", "https://cdn.jsdelivr.net"],
+      frameSrc: ["'self'"],
     },
   },
 }));
