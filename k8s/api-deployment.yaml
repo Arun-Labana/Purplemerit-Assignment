@@ -25,8 +25,8 @@ spec:
     spec:
       containers:
       - name: api-server
-        image: your-registry/collaborative-workspace:latest
-        imagePullPolicy: Always
+        image: collaborative-workspace:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
           name: http
