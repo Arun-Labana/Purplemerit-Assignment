@@ -21,6 +21,35 @@ async function startServer() {
       throw new Error('PostgreSQL connection failed');
     }
 
+    // Run migrations automatically on startup (only if tables don't exist)
+    if (process.env.AUTO_MIGRATE === 'true') {
+      try {
+        logger.info('Checking if migrations are needed...');
+        const result = await pgDatabase.query(`
+          SELECT EXISTS (
+            SELECT FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+            AND table_name = 'users'
+          );
+        `);
+        const tablesExist = result.rows[0].exists;
+        
+        if (!tablesExist) {
+          logger.info('Tables not found, running migrations...');
+          const fs = await import('fs');
+          const path = await import('path');
+          const schemaPath = path.join(__dirname, '../infrastructure/database/postgresql/schema.sql');
+          const schema = fs.readFileSync(schemaPath, 'utf8');
+          await pgDatabase.query(schema);
+          logger.info('Migrations completed successfully');
+        } else {
+          logger.info('Tables already exist, skipping migrations');
+        }
+      } catch (migrationError) {
+        logger.warn('Auto-migration failed, continuing anyway', migrationError);
+      }
+    }
+
     const mongoConnected = await mongoDatabase.testConnection();
     if (!mongoConnected) {
       throw new Error('MongoDB connection failed');
