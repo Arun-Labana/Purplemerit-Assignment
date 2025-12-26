@@ -58,7 +58,7 @@ router.use(authMiddleware);
  *       401:
  *         description: Unauthorized
  */
-router.post('/projects/:projectId/workspaces', validate(Validators.createWorkspace), WorkspaceController.create.bind(WorkspaceController));
+router.post('/:projectId/workspaces', validate(Validators.createWorkspace), WorkspaceController.create.bind(WorkspaceController));
 
 /**
  * @swagger
@@ -92,41 +92,6 @@ router.post('/projects/:projectId/workspaces', validate(Validators.createWorkspa
  *       401:
  *         description: Unauthorized
  */
-router.get('/projects/:projectId/workspaces', WorkspaceController.listByProject.bind(WorkspaceController));
-
-/**
- * @swagger
- * /api/v1/workspaces/{id}:
- *   get:
- *     summary: Get workspace by ID
- *     tags: [Workspaces]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *     responses:
- *       200:
- *         description: Workspace details
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 data:
- *                   $ref: '#/components/schemas/Workspace'
- *       401:
- *         description: Unauthorized
- *       404:
- *         description: Workspace not found
- */
-router.get('/:id', WorkspaceController.getById.bind(WorkspaceController));
+router.get('/:projectId/workspaces', WorkspaceController.listByProject.bind(WorkspaceController));
 
 export default router;
-
