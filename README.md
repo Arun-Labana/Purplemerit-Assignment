@@ -51,9 +51,34 @@ npm install
 
 ### 3. Setup Environment Variables
 
-```bash
-cp .env.example .env
-# Edit .env with your configuration
+Create a `.env` file in the root directory with the following variables:
+
+```env
+NODE_ENV=development
+PORT=3000
+API_VERSION=v1
+
+# Database URLs (matching docker-compose ports)
+DATABASE_URL=postgresql://postgres:postgres@localhost:5433/collaborative_workspace
+MONGODB_URI=mongodb://localhost:27017/collaborative_workspace
+REDIS_URL=redis://localhost:6380
+RABBITMQ_URL=amqp://admin:admin@localhost:5672
+
+# JWT Secrets (use strong secrets in production)
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_REFRESH_SECRET=your-super-secret-refresh-key-change-this
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+
+# CORS
+CORS_ORIGIN=http://localhost:3000,http://localhost:3001
+
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=60000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# Logging
+LOG_LEVEL=info
 ```
 
 ### 4. Start Services with Docker Compose
@@ -63,9 +88,9 @@ docker-compose up -d
 ```
 
 This will start:
-- PostgreSQL on port 5432
+- PostgreSQL on port 5433 (mapped from internal 5432)
 - MongoDB on port 27017
-- Redis on port 6379
+- Redis on port 6380 (mapped from internal 6379)
 - RabbitMQ on ports 5672 (AMQP) and 15672 (Management UI)
 
 ### 5. Run Database Migrations
@@ -191,7 +216,19 @@ See `k8s/README.md` for complete Kubernetes deployment guide.
 
 ### Environment Variables
 
-See `.env.example` for all required environment variables.
+Required environment variables (for docker-compose setup):
+- `DATABASE_URL` - PostgreSQL connection string (use `postgresql://postgres:postgres@localhost:5433/collaborative_workspace` for docker-compose)
+- `MONGODB_URI` - MongoDB connection string (default: `mongodb://localhost:27017/collaborative_workspace`)
+- `REDIS_URL` - Redis connection string (use `redis://localhost:6380` for docker-compose)
+- `RABBITMQ_URL` - RabbitMQ connection string (default: `amqp://admin:admin@localhost:5672`)
+- `JWT_SECRET` - Secret key for JWT access tokens (required in production)
+- `JWT_REFRESH_SECRET` - Secret key for JWT refresh tokens (required in production)
+- `JWT_EXPIRES_IN` - Access token expiry (default: `15m`)
+- `JWT_REFRESH_EXPIRES_IN` - Refresh token expiry (default: `7d`)
+- `CORS_ORIGIN` - Comma-separated list of allowed origins
+- `RATE_LIMIT_WINDOW_MS` - Rate limit window in milliseconds (default: `60000`)
+- `RATE_LIMIT_MAX_REQUESTS` - Max requests per window (default: `100`)
+- `LOG_LEVEL` - Logging level (default: `info`)
 
 ## Design Decisions
 
