@@ -21,7 +21,7 @@ async function startServer() {
       throw new Error('PostgreSQL connection failed');
     }
 
-    // Run migrations automatically on startup (only if tables don't exist)
+    // Run migrations automatically on startup
     if (process.env.AUTO_MIGRATE === 'true') {
       try {
         logger.info('Checking if migrations are needed...');
@@ -35,7 +35,7 @@ async function startServer() {
         const tablesExist = result.rows[0].exists;
         
         if (!tablesExist) {
-          logger.info('Tables not found, running migrations...');
+          logger.info('Tables not found, running schema migrations...');
           const fs = await import('fs');
           const path = await import('path');
           // Try multiple paths for schema.sql (dev vs production)
@@ -61,9 +61,31 @@ async function startServer() {
           logger.info(`Loading schema from: ${schemaPath}`);
           const schema = fs.readFileSync(schemaPath, 'utf8');
           await pgDatabase.query(schema);
-          logger.info('Migrations completed successfully');
+          logger.info('Schema migrations completed');
         } else {
-          logger.info('Tables already exist, skipping migrations');
+          logger.info('Tables already exist, skipping schema migrations');
+        }
+
+        // Always run idempotency migration (adds column to existing tables if needed)
+        logger.info('Checking for idempotency_key column migration...');
+        const checkColumn = await pgDatabase.query(`
+          SELECT column_name 
+          FROM information_schema.columns 
+          WHERE table_name = 'jobs' AND column_name = 'idempotency_key'
+        `);
+
+        if (checkColumn.rows.length > 0) {
+          logger.info('Column idempotency_key already exists, skipping migration');
+        } else {
+          logger.info('Adding idempotency_key column to jobs table...');
+          await pgDatabase.query(`
+            ALTER TABLE jobs 
+            ADD COLUMN idempotency_key VARCHAR(255) UNIQUE
+          `);
+          await pgDatabase.query(`
+            CREATE INDEX IF NOT EXISTS idx_jobs_idempotency_key ON jobs(idempotency_key)
+          `);
+          logger.info('Idempotency migration completed successfully');
         }
       } catch (migrationError) {
         logger.warn('Auto-migration failed, continuing anyway', migrationError);
