@@ -47,10 +47,11 @@ async function runMigrations() {
       const schema = fs.readFileSync(schemaPath, 'utf8');
       await pgDatabase.query(schema);
       logger.info('Schema migrations completed');
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Log but don't fail - schema might have partial errors (e.g., triggers already exist)
       // This is okay as long as tables exist
-      logger.warn('Schema migration had some errors (this is okay if tables already exist)', { error: error.message });
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.warn('Schema migration had some errors (this is okay if tables already exist)', { error: errorMessage });
     }
 
     // Always run idempotency key migration (adds column to existing tables if needed)
