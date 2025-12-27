@@ -1,3 +1,16 @@
+jest.mock('../../../../src/infrastructure/database/redis/connection', () => ({
+  __esModule: true,
+  default: {
+    getClient: jest.fn(),
+    get: jest.fn(),
+    set: jest.fn(),
+    del: jest.fn(),
+    exists: jest.fn(),
+    keys: jest.fn(),
+    testConnection: jest.fn().mockResolvedValue(true),
+  },
+}));
+
 import { Response, NextFunction } from 'express';
 import JobController from '../../../../src/presentation/controllers/JobController';
 import SubmitJob from '../../../../src/application/use-cases/jobs/SubmitJob';
@@ -10,6 +23,7 @@ import { JobType, JobStatus } from '../../../../src/shared/constants/enums';
 jest.mock('../../../../src/application/use-cases/jobs/SubmitJob');
 jest.mock('../../../../src/application/use-cases/jobs/GetJobStatus');
 jest.mock('../../../../src/infrastructure/database/postgresql/JobRepository');
+jest.mock('../../../../src/infrastructure/database/redis/IdempotencyService');
 
 describe('JobController', () => {
   let mockRequest: Partial<AuthRequest>;
@@ -33,6 +47,7 @@ describe('JobController', () => {
         type: JobType.CODE_EXECUTION,
         payload: { code: 'console.log("test")' },
       },
+      headers: {},
       query: {},
     };
 
@@ -57,6 +72,7 @@ describe('JobController', () => {
         JobStatus.PENDING,
         0,
         3,
+        null,
         new Date(),
         null,
         null
@@ -65,7 +81,15 @@ describe('JobController', () => {
 
       await JobController.submit(mockRequest as AuthRequest, mockResponse as Response, mockNext);
 
-      expect(SubmitJob.execute).toHaveBeenCalledWith(mockRequest.body, 'user-123');
+      expect(SubmitJob.execute).toHaveBeenCalledWith(
+        expect.objectContaining({
+          workspaceId: 'workspace-123',
+          type: JobType.CODE_EXECUTION,
+          payload: { code: 'console.log("test")' },
+          idempotencyKey: undefined,
+        }),
+        'user-123'
+      );
       expect(statusMock).toHaveBeenCalledWith(201);
       expect(jsonMock).toHaveBeenCalled();
     });
@@ -89,6 +113,7 @@ describe('JobController', () => {
         JobStatus.PENDING,
         0,
         3,
+        null,
         new Date(),
         null,
         null

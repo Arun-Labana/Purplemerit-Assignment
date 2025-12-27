@@ -3,6 +3,7 @@ import JobResultRepository from '../../../infrastructure/database/mongodb/JobRes
 import WorkspaceRepository from '../../../infrastructure/database/postgresql/WorkspaceRepository';
 import ProjectMemberRepository from '../../../infrastructure/database/postgresql/ProjectMemberRepository';
 import rabbitmqPublisher from '../../../infrastructure/messaging/rabbitmq/publisher';
+import idempotencyService from '../../../infrastructure/database/redis/IdempotencyService';
 import { IJobCreate } from '../../../shared/types';
 import { Job } from '../../../domain/entities/Job';
 import { Role } from '../../../domain/value-objects/Role';
@@ -28,8 +29,54 @@ export class SubmitJob {
       const role = new Role(member.role);
       role.assertPermission('write');
 
+      // Check idempotency if idempotency key is provided
+      if (jobData.idempotencyKey) {
+        // First check Redis cache
+        const cachedJobId = await idempotencyService.getJobId(jobData.idempotencyKey, jobData.workspaceId);
+        if (cachedJobId) {
+          const existingJob = await JobRepository.findById(cachedJobId);
+          if (existingJob) {
+            logger.info('Job already exists with idempotency key', {
+              idempotencyKey: jobData.idempotencyKey,
+              jobId: existingJob.id,
+              userId,
+            });
+            return Job.fromDatabase(existingJob);
+          }
+        }
+
+        // Check database for existing job with same idempotency key
+        const existingJob = await JobRepository.findByIdempotencyKey(
+          jobData.idempotencyKey,
+          jobData.workspaceId
+        );
+        if (existingJob) {
+          // Store in Redis cache for faster future lookups
+          await idempotencyService.setJobId(
+            jobData.idempotencyKey,
+            jobData.workspaceId,
+            existingJob.id
+          );
+          logger.info('Job already exists with idempotency key', {
+            idempotencyKey: jobData.idempotencyKey,
+            jobId: existingJob.id,
+            userId,
+          });
+          return Job.fromDatabase(existingJob);
+        }
+      }
+
       // Create job in PostgreSQL
       const jobRecord = await JobRepository.create(jobData);
+
+      // Store idempotency key in Redis if provided
+      if (jobData.idempotencyKey) {
+        await idempotencyService.setJobId(
+          jobData.idempotencyKey,
+          jobData.workspaceId,
+          jobRecord.id
+        );
+      }
 
       // Create job result document in MongoDB
       await JobResultRepository.create({
@@ -48,7 +95,12 @@ export class SubmitJob {
         jobData.payload
       );
 
-      logger.info('Job submitted successfully', { jobId: jobRecord.id, type: jobData.type, userId });
+      logger.info('Job submitted successfully', {
+        jobId: jobRecord.id,
+        type: jobData.type,
+        idempotencyKey: jobData.idempotencyKey,
+        userId,
+      });
 
       return Job.fromDatabase(jobRecord);
     } catch (error) {

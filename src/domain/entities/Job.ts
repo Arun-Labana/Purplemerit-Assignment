@@ -10,6 +10,7 @@ export class Job {
     public readonly status: string,
     public readonly retries: number,
     public readonly maxRetries: number,
+    public readonly idempotencyKey: string | null,
     public readonly createdAt: Date,
     public readonly completedAt: Date | null,
     public readonly errorMessage: string | null
@@ -39,6 +40,7 @@ export class Job {
       data.status,
       data.retries,
       data.maxRetries,
+      data.idempotencyKey || null,
       data.createdAt,
       data.completedAt,
       data.errorMessage
@@ -73,6 +75,7 @@ export class Job {
       status: this.status,
       retries: this.retries,
       maxRetries: this.maxRetries,
+      idempotencyKey: this.idempotencyKey,
       createdAt: this.createdAt,
       completedAt: this.completedAt,
       errorMessage: this.errorMessage,

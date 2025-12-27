@@ -8,7 +8,7 @@ export class JobRepository {
     try {
       const result = await pgDatabase.query(
         `SELECT id, workspace_id as "workspaceId", type, status, retries, max_retries as "maxRetries",
-                created_at as "createdAt", completed_at as "completedAt", error_message as "errorMessage"
+                idempotency_key as "idempotencyKey", created_at as "createdAt", completed_at as "completedAt", error_message as "errorMessage"
          FROM jobs WHERE id = $1`,
         [id]
       );
@@ -19,11 +19,26 @@ export class JobRepository {
     }
   }
 
+  async findByIdempotencyKey(idempotencyKey: string, workspaceId: string): Promise<IJob | null> {
+    try {
+      const result = await pgDatabase.query(
+        `SELECT id, workspace_id as "workspaceId", type, status, retries, max_retries as "maxRetries",
+                idempotency_key as "idempotencyKey", created_at as "createdAt", completed_at as "completedAt", error_message as "errorMessage"
+         FROM jobs WHERE idempotency_key = $1 AND workspace_id = $2`,
+        [idempotencyKey, workspaceId]
+      );
+      return result.rows[0] || null;
+    } catch (error) {
+      logger.error('Error finding job by idempotency key', { idempotencyKey, workspaceId, error });
+      throw error;
+    }
+  }
+
   async findByWorkspaceId(workspaceId: string, limit: number = 20, offset: number = 0): Promise<IJob[]> {
     try {
       const result = await pgDatabase.query(
         `SELECT id, workspace_id as "workspaceId", type, status, retries, max_retries as "maxRetries",
-                created_at as "createdAt", completed_at as "completedAt", error_message as "errorMessage"
+                idempotency_key as "idempotencyKey", created_at as "createdAt", completed_at as "completedAt", error_message as "errorMessage"
          FROM jobs WHERE workspace_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3`,
         [workspaceId, limit, offset]
       );
@@ -37,11 +52,11 @@ export class JobRepository {
   async create(jobData: IJobCreate): Promise<IJob> {
     try {
       const result = await pgDatabase.query(
-        `INSERT INTO jobs (workspace_id, type, status) 
-         VALUES ($1, $2, $3) 
+        `INSERT INTO jobs (workspace_id, type, status, idempotency_key) 
+         VALUES ($1, $2, $3, $4) 
          RETURNING id, workspace_id as "workspaceId", type, status, retries, max_retries as "maxRetries",
-                   created_at as "createdAt", completed_at as "completedAt", error_message as "errorMessage"`,
-        [jobData.workspaceId, jobData.type, JobStatus.PENDING]
+                   idempotency_key as "idempotencyKey", created_at as "createdAt", completed_at as "completedAt", error_message as "errorMessage"`,
+        [jobData.workspaceId, jobData.type, JobStatus.PENDING, jobData.idempotencyKey || null]
       );
       return result.rows[0];
     } catch (error) {
@@ -58,7 +73,7 @@ export class JobRepository {
         `UPDATE jobs SET status = $1, completed_at = $2, error_message = $3
          WHERE id = $4
          RETURNING id, workspace_id as "workspaceId", type, status, retries, max_retries as "maxRetries",
-                   created_at as "createdAt", completed_at as "completedAt", error_message as "errorMessage"`,
+                   idempotency_key as "idempotencyKey", created_at as "createdAt", completed_at as "completedAt", error_message as "errorMessage"`,
         [status, completedAt, errorMessage || null, id]
       );
       return result.rows[0] || null;
@@ -74,7 +89,7 @@ export class JobRepository {
         `UPDATE jobs SET retries = retries + 1
          WHERE id = $1
          RETURNING id, workspace_id as "workspaceId", type, status, retries, max_retries as "maxRetries",
-                   created_at as "createdAt", completed_at as "completedAt", error_message as "errorMessage"`,
+                   idempotency_key as "idempotencyKey", created_at as "createdAt", completed_at as "completedAt", error_message as "errorMessage"`,
         [id]
       );
       return result.rows[0] || null;

@@ -9,9 +9,22 @@ import { SUCCESS_MESSAGES } from '../../shared/constants';
 export class JobController {
   async submit(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const job = await SubmitJob.execute(req.body, req.user!.userId);
+      // Get idempotency key from header (Idempotency-Key) or body
+      const idempotencyKey = req.headers['idempotency-key'] as string || req.body.idempotencyKey;
+      
+      const jobData = {
+        ...req.body,
+        idempotencyKey,
+      };
 
-      res.status(HttpStatus.CREATED).json({
+      const job = await SubmitJob.execute(jobData, req.user!.userId);
+
+      // Return 200 OK if job already existed (idempotent), 201 Created if new
+      const statusCode = idempotencyKey && job.createdAt.getTime() < Date.now() - 1000
+        ? HttpStatus.OK
+        : HttpStatus.CREATED;
+
+      res.status(statusCode).json({
         success: true,
         message: SUCCESS_MESSAGES.JOB_SUBMITTED,
         data: job.toResponse(),

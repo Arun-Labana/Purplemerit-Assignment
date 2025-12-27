@@ -93,6 +93,7 @@ export interface IJob {
   status: string;
   retries: number;
   maxRetries: number;
+  idempotencyKey?: string | null;
   createdAt: Date;
   completedAt: Date | null;
   errorMessage: string | null;
@@ -102,6 +103,7 @@ export interface IJobCreate {
   workspaceId: string;
   type: string;
   payload: Record<string, any>;
+  idempotencyKey?: string;
 }
 
 export interface IJobResult {

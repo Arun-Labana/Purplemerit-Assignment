@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS jobs (
   status VARCHAR(50) DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'failed')),
   retries INT DEFAULT 0,
   max_retries INT DEFAULT 3,
+  idempotency_key VARCHAR(255) UNIQUE,
   created_at TIMESTAMP DEFAULT NOW(),
   completed_at TIMESTAMP,
   error_message TEXT
@@ -64,6 +65,7 @@ CREATE TABLE IF NOT EXISTS jobs (
 CREATE INDEX IF NOT EXISTS idx_jobs_workspace_id ON jobs(workspace_id);
 CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status);
 CREATE INDEX IF NOT EXISTS idx_jobs_created_at ON jobs(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_jobs_idempotency_key ON jobs(idempotency_key);
 
 -- Create function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()

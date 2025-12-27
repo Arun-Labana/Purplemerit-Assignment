@@ -17,6 +17,13 @@ router.use(authMiddleware);
  *     tags: [Jobs]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Idempotency-Key
+ *         schema:
+ *           type: string
+ *           maxLength: 255
+ *         description: Optional idempotency key to prevent duplicate job submissions. If provided and a job with the same key exists, the existing job will be returned.
  *     requestBody:
  *       required: true
  *       content:
@@ -40,7 +47,13 @@ router.use(authMiddleware);
  *                 example:
  *                   code: console.log("Hello World");
  *                   language: javascript
+ *               idempotencyKey:
+ *                 type: string
+ *                 maxLength: 255
+ *                 description: Optional idempotency key (can also be provided via Idempotency-Key header)
  *     responses:
+ *       200:
+ *         description: Job already exists with the provided idempotency key (idempotent response)
  *       201:
  *         description: Job submitted successfully
  *         content:

@@ -10,6 +10,7 @@ describe('Job Entity', () => {
     status: JobStatus.PENDING,
     retries: 0,
     maxRetries: 3,
+    idempotencyKey: null,
     createdAt: new Date('2024-01-01'),
     completedAt: null,
     errorMessage: null,
@@ -24,6 +25,7 @@ describe('Job Entity', () => {
         validJobData.status,
         validJobData.retries,
         validJobData.maxRetries,
+        validJobData.idempotencyKey,
         validJobData.createdAt,
         validJobData.completedAt,
         validJobData.errorMessage
@@ -44,6 +46,7 @@ describe('Job Entity', () => {
           validJobData.status,
           validJobData.retries,
           validJobData.maxRetries,
+          validJobData.idempotencyKey,
           validJobData.createdAt,
           validJobData.completedAt,
           validJobData.errorMessage
@@ -60,6 +63,7 @@ describe('Job Entity', () => {
           validJobData.status,
           validJobData.retries,
           validJobData.maxRetries,
+          validJobData.idempotencyKey,
           validJobData.createdAt,
           validJobData.completedAt,
           validJobData.errorMessage
@@ -76,6 +80,7 @@ describe('Job Entity', () => {
           validJobData.status,
           validJobData.retries,
           validJobData.maxRetries,
+          validJobData.idempotencyKey,
           validJobData.createdAt,
           validJobData.completedAt,
           validJobData.errorMessage

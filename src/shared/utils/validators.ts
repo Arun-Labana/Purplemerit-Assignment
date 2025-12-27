@@ -126,6 +126,9 @@ export class Validators {
     payload: Joi.object().required().messages({
       'any.required': 'Job payload is required',
     }),
+    idempotencyKey: Joi.string().max(255).optional().messages({
+      'string.max': 'Idempotency key must not exceed 255 characters',
+    }),
   });
 
   /**
