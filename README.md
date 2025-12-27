@@ -17,6 +17,97 @@ A production-grade real-time collaborative workspace backend built with Node.js,
 - 🧪 **Testing**: Unit and integration tests with Jest
 - 🐳 **Docker**: Containerized services for easy deployment
 
+## Architecture
+
+### Architecture Diagram
+
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        WEB[Web Client]
+        MOBILE[Mobile Client]
+    end
+
+    subgraph "Presentation Layer"
+        API[Express API Server]
+        WS[WebSocket Server]
+        MIDDLEWARE[Auth/Rate Limit/Validation Middleware]
+    end
+
+    subgraph "Application Layer"
+        UC1[Auth Use Cases]
+        UC2[Project Use Cases]
+        UC3[Job Use Cases]
+        UC4[Collaboration Use Cases]
+    end
+
+    subgraph "Domain Layer"
+        ENTITIES[Entities: User, Project, Workspace, Job]
+        VO[Value Objects: Role, Email]
+    end
+
+    subgraph "Infrastructure Layer"
+        PG[(PostgreSQL<br/>Relational Data)]
+        MONGO[(MongoDB<br/>Event Logs)]
+        REDIS[(Redis<br/>Cache/Sessions)]
+        RABBITMQ[RabbitMQ<br/>Message Queue]
+        WORKER[Background Worker]
+    end
+
+    WEB --> API
+    MOBILE --> API
+    WEB --> WS
+    
+    API --> MIDDLEWARE
+    MIDDLEWARE --> UC1
+    MIDDLEWARE --> UC2
+    MIDDLEWARE --> UC3
+    MIDDLEWARE --> UC4
+    
+    UC1 --> ENTITIES
+    UC2 --> ENTITIES
+    UC3 --> ENTITIES
+    UC4 --> ENTITIES
+    
+    ENTITIES --> VO
+    
+    UC1 --> PG
+    UC2 --> PG
+    UC3 --> PG
+    UC4 --> PG
+    
+    UC1 --> REDIS
+    UC2 --> REDIS
+    UC3 --> REDIS
+    UC4 --> REDIS
+    
+    UC2 --> MONGO
+    UC3 --> MONGO
+    UC4 --> MONGO
+    
+    UC3 --> RABBITMQ
+    RABBITMQ --> WORKER
+    WORKER --> PG
+    WORKER --> MONGO
+    
+    WS --> REDIS
+    WS --> RABBITMQ
+```
+
+### Multi-Datastore Strategy
+
+- **PostgreSQL**: ACID-compliant relational data (users, projects, workspaces, members, jobs)
+- **MongoDB**: High-write event logs (activity logs, collaboration events, job results)
+- **Redis**: In-memory caching, sessions, and feature flags
+
+### Clean Architecture
+
+The application follows Clean Architecture principles:
+1. **Domain Layer**: Business entities and rules
+2. **Application Layer**: Use cases and business logic
+3. **Infrastructure Layer**: Database implementations and external services
+4. **Presentation Layer**: API controllers and routes
+
 ## Tech Stack
 
 - **Runtime**: Node.js 18+
@@ -143,22 +234,6 @@ src/
 ├── shared/              # Shared utilities and types
 └── config/              # Configuration
 ```
-
-## Architecture
-
-### Multi-Datastore Strategy
-
-- **PostgreSQL**: ACID-compliant relational data (users, projects, workspaces, members, jobs)
-- **MongoDB**: High-write event logs (activity logs, collaboration events, job results)
-- **Redis**: In-memory caching, sessions, and feature flags
-
-### Clean Architecture
-
-The application follows Clean Architecture principles:
-1. **Domain Layer**: Business entities and rules
-2. **Application Layer**: Use cases and business logic
-3. **Infrastructure Layer**: Database implementations and external services
-4. **Presentation Layer**: API controllers and routes
 
 ## Testing
 
